@@ -1,0 +1,21 @@
+{
+  "name": "serverless-academy",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node index"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Danila-Fateev/serverless-academy.git"
+  },
+  "keywords": [],
+  "author": "Danila <fateevdanon@gmail.com>",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Danila-Fateev/serverless-academy/issues"
+  },
+  "homepage": "https://github.com/Danila-Fateev/serverless-academy#readme"
+}
