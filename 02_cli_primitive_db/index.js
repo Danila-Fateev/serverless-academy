@@ -37,7 +37,7 @@ const questions = [
   },
   {
     type: "confirm",
-    name: "searchValues",
+    name: "showDB",
     message: "Would you like to search values in DB? ",
     default: false,
 
@@ -47,15 +47,32 @@ const questions = [
   },
 ];
 
-inquirer
-  .prompt(questions)
-  .then((answers) => {
-    console.log(JSON.stringify(answers, null, "  "));
-  })
-  .catch((error) => {
-    if (error.isTtyError) {
-      // Prompt couldn't be rendered in the current environment
-    } else {
-      // Something else went wrong
-    }
-  });
+function interactWithDB() {
+  inquirer
+    .prompt(questions)
+    .then(async (answers) => {
+      const data = await fs.readFile("./db/users.txt");
+      const parsedData = JSON.parse(data.toString("utf-8"));
+      if (answers.showDB) {
+        console.log(parsedData);
+      }
+      if (!answers.showDB) {
+        const { userName, gender, age } = answers;
+        const newData = [...parsedData, { userName, gender, age }];
+        await fs.writeFile(
+          "./db/users.txt",
+          JSON.stringify(newData, null, "  ")
+        );
+      }
+      interactWithDB();
+    })
+    .catch((error) => {
+      if (error.isTtyError) {
+        // Prompt couldn't be rendered in the current environment
+      } else {
+        // Something else went wrong
+      }
+    });
+}
+
+interactWithDB();

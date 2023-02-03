@@ -1,1 +1,18 @@
-{"name": "John", "age": 30, "car": null}
+[
+  {
+    "userName": "Kate",
+    "gender": "female",
+    "age": "18"
+  },
+  {
+    "userName": "Daniel",
+    "gender": "male",
+    "age": "20"
+  },
+  {
+    "userName": "Vadim",
+    "gender": "male",
+    "age": "12"
+  },
+
+]
