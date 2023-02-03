@@ -10,9 +10,13 @@
     "age": "20"
   },
   {
-    "userName": "Vadim",
+    "userName": "Frank",
     "gender": "male",
-    "age": "12"
+    "age": "45"
   },
-
+  {
+    "userName": "Leon",
+    "gender": "male",
+    "age": "22"
+  }
 ]

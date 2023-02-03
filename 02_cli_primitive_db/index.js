@@ -14,7 +14,7 @@ const questions = [
     message: "Choose your GENDER. ",
     choices: ["male", "female"],
     when(answers) {
-      return answers.userName != false;
+      return answers.userName.trim() != false;
     },
   },
   {
@@ -32,7 +32,7 @@ const questions = [
       return true;
     },
     when(answers) {
-      return answers.userName != false;
+      return answers.userName.trim() != false;
     },
   },
   {
@@ -42,7 +42,27 @@ const questions = [
     default: false,
 
     when(answers) {
-      return answers.userName == false;
+      return answers.userName.trim() == false;
+    },
+  },
+  {
+    type: "input",
+    name: "searchUser",
+    message: "Enter user's name you wanna find in DB: ",
+    validate(answer) {
+      if (answer.trim() == false) {
+        return "Please, enter a name";
+      }
+      return true;
+    },
+    when: async (answers) => {
+      if (answers.userName.trim() == false) {
+        const database = JSON.parse(
+          (await fs.readFile("./db/users.txt")).toString("utf-8")
+        );
+        console.log(database);
+        return true;
+      }
     },
   },
 ];
@@ -54,9 +74,17 @@ function interactWithDB() {
       const data = await fs.readFile("./db/users.txt");
       const parsedData = JSON.parse(data.toString("utf-8"));
       if (answers.showDB) {
-        console.log(parsedData);
-      }
-      if (!answers.showDB) {
+        const foundUser = parsedData.find(
+          (el) => el.userName.toLowerCase() === answers.searchUser.toLowerCase()
+        );
+        if (foundUser) {
+          console.log(foundUser);
+        } else {
+          console.log(
+            `Sorry, but user with name ${answers.searchUser} was not found`
+          );
+        }
+      } else if (!answers.showDB) {
         const { userName, gender, age } = answers;
         const newData = [...parsedData, { userName, gender, age }];
         await fs.writeFile(
