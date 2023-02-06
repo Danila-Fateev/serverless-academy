@@ -13,7 +13,7 @@ async function getWeather() {
   const fetchedData = await axios.get(URL);
   const { weather, main, wind, name } = fetchedData.data;
   const text = `${name} forecast:
-  Weather: ${weather.main},
+  Weather: ${weather[0].main},
     Temperature: ${Math.floor(main.temp)}°C,
     Feels like: ${Math.floor(main.feels_like)}°C,
     Wind speed: ${wind.speed} m/s`;
