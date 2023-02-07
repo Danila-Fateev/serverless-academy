@@ -20,9 +20,44 @@ async function getWeather() {
   return text;
 }
 
-bot.onText(/\/weather/, async (msg) => {
+bot.onText(/\/start/, (msg) => {
+  const chatId = msg.chat.id;
+
+  bot.sendMessage(chatId, "Welcome!", {
+    reply_markup: {
+      keyboard: [["Forecast in Lviv"]],
+    },
+  });
+});
+
+bot.on("message", async (msg) => {
   const chatId = msg.chat.id;
   const weatherMessage = await getWeather();
+  if (msg.text === "Forecast in Lviv") {
+    bot.sendMessage(chatId, "Choose an option:", {
+      reply_markup: {
+        keyboard: [["Forecast for 3 hours"], ["Forecast for 6 hours"]],
+      },
+    });
+  }
 
-  bot.sendMessage(chatId, weatherMessage);
+  if (msg.text === "Forecast for 3 hours") {
+    bot.sendMessage(chatId, "Forecast for THREE HOURS");
+  }
+  if (msg.text === "Forecast for 6 hours") {
+    bot.sendMessage(chatId, "Forecast for SIX HOURS");
+  }
 });
+
+async function getForecast() {
+  const info = await axios.get(
+    `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&cnt=3&appid=${apiKey}&units=metric`
+  );
+  info.data.list.map((el) => {
+    const time = new Date(el.dt_txt);
+    // console.log(el);
+    console.log(time.toString());
+  });
+}
+
+getForecast();
