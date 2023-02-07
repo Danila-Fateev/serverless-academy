@@ -7,17 +7,29 @@ const lon = "24.0232";
 const apiKey = process.env.API_KEY;
 const token = process.env.TOKEN;
 const bot = new TelegramBot(token, { polling: true });
-const URL = `https://api.openweathermap.org/data/2.5/weather?lat=${lat}&lon=${lon}&appid=${apiKey}&units=metric`;
+const URL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&cnt=3&appid=${apiKey}&units=metric`;
 
-async function getWeather() {
+async function getForecast() {
   const fetchedData = await axios.get(URL);
-  const { weather, main, wind, name } = fetchedData.data;
-  const text = `${name} forecast:
-  Weather: ${weather[0].main},
-    Temperature: ${Math.floor(main.temp)}°C,
-    Feels like: ${Math.floor(main.feels_like)}°C,
-    Wind speed: ${wind.speed} m/s`;
-  return text;
+  const {
+    city: { name },
+  } = fetchedData.data;
+  const forecast = fetchedData.data.list.map((el) => {
+    const { weather, main, wind, dt_txt } = el;
+    const time = new Date(dt_txt);
+    const text = `${time.toLocaleString()}
+                  ${name} forecast:
+                  Weather: ${weather[0].main},
+                  Temperature: ${Math.floor(main.temp)}°C,
+                  Feels like: ${Math.floor(main.feels_like)}°C,
+                  Wind speed: ${wind.speed} m/s
+    
+    `;
+
+    return text;
+  });
+
+  return forecast;
 }
 
 bot.onText(/\/start/, (msg) => {
@@ -32,8 +44,8 @@ bot.onText(/\/start/, (msg) => {
 
 bot.on("message", async (msg) => {
   const chatId = msg.chat.id;
-  const weatherMessage = await getWeather();
-  if (msg.text === "Forecast in Lviv") {
+  const weatherMessage = await getForecast();
+  if (msg.text.toLowerCase() === "forecast in lviv") {
     bot.sendMessage(chatId, "Choose an option:", {
       reply_markup: {
         keyboard: [["Forecast for 3 hours"], ["Forecast for 6 hours"]],
@@ -41,23 +53,10 @@ bot.on("message", async (msg) => {
     });
   }
 
-  if (msg.text === "Forecast for 3 hours") {
-    bot.sendMessage(chatId, "Forecast for THREE HOURS");
+  if (msg.text.toLowerCase() === "forecast for 3 hours") {
+    bot.sendMessage(chatId, weatherMessage[1]);
   }
-  if (msg.text === "Forecast for 6 hours") {
-    bot.sendMessage(chatId, "Forecast for SIX HOURS");
+  if (msg.text.toLowerCase() === "forecast for 6 hours") {
+    bot.sendMessage(chatId, weatherMessage[2]);
   }
 });
-
-async function getForecast() {
-  const info = await axios.get(
-    `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&cnt=3&appid=${apiKey}&units=metric`
-  );
-  info.data.list.map((el) => {
-    const time = new Date(el.dt_txt);
-    // console.log(el);
-    console.log(time.toString());
-  });
-}
-
-getForecast();
