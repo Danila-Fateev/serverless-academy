@@ -48,7 +48,11 @@ bot.on("message", async (msg) => {
   if (msg.text.toLowerCase() === "forecast in lviv") {
     bot.sendMessage(chatId, "Choose an option:", {
       reply_markup: {
-        keyboard: [["Forecast for 3 hours"], ["Forecast for 6 hours"]],
+        keyboard: [
+          ["Forecast for 3 hours"],
+          ["Forecast for 6 hours"],
+          ["Go back"],
+        ],
       },
     });
   }
@@ -58,5 +62,13 @@ bot.on("message", async (msg) => {
   }
   if (msg.text.toLowerCase() === "forecast for 6 hours") {
     bot.sendMessage(chatId, weatherMessage[2]);
+  }
+
+  if (msg.text.toLowerCase() === "go back") {
+    bot.sendMessage(chatId, "Choose an option:", {
+      reply_markup: {
+        keyboard: [["Forecast in Lviv"]],
+      },
+    });
   }
 });
