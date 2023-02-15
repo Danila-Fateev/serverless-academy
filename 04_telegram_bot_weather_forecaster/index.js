@@ -6,7 +6,7 @@ const lon = "24.0232";
 const apiKey = process.env.API_KEY;
 const token = process.env.TOKEN;
 const bot = new TelegramBot(token, { polling: true });
-const URL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&cnt=3&appid=${apiKey}&units=metric`;
+const URL = `https://api.openweathermap.org/data/2.5/forecast?lat=${lat}&lon=${lon}&cnt=10&appid=${apiKey}&units=metric`;
 
 async function getForecast() {
   const fetchedData = await axios.get(URL);
@@ -57,10 +57,11 @@ bot.on("message", async (msg) => {
   }
 
   if (msg.text.toLowerCase() === "forecast for 3 hours") {
-    bot.sendMessage(chatId, weatherMessage[1]);
+    bot.sendMessage(chatId, weatherMessage.join(""));
   }
   if (msg.text.toLowerCase() === "forecast for 6 hours") {
-    bot.sendMessage(chatId, weatherMessage[2]);
+    const sixHours = weatherMessage.filter((el, index) => index % 2 === 0);
+    bot.sendMessage(chatId, sixHours.join(""));
   }
 
   if (msg.text.toLowerCase() === "go back") {
