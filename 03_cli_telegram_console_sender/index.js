@@ -1,7 +1,7 @@
 const TelegramBot = require("node-telegram-bot-api");
 const { Command } = require("commander");
 const program = new Command();
-require("dotenv").config();
+// require("dotenv").config();
 const token = process.env.TOKEN;
 const bot = new TelegramBot(token, { polling: true });
 const chatId = process.env.CHAT_ID;
