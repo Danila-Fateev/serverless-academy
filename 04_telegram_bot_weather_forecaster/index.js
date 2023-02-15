@@ -1,6 +1,5 @@
 const axios = require("axios");
 const TelegramBot = require("node-telegram-bot-api");
-require("dotenv").config();
 
 const lat = "49.8383";
 const lon = "24.0232";
