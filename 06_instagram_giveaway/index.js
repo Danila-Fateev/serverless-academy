@@ -1,6 +1,8 @@
 const fs = require("fs").promises;
 
 async function getUnique() {
+  console.time("Took time");
+
   const out0 = await fs.readFile("./db/out0.txt").then((data) => {
     const str = data.toString("utf-8").split(" ");
     const splittedStr = str[0].split("\n");
@@ -144,7 +146,9 @@ async function getUnique() {
     ...out19,
   ];
   const uniqueName = [...new Set(files)];
-  console.log(uniqueName);
+
+  console.log("Unique usernames: ", uniqueName.length);
+  console.timeEnd("Took time");
 }
 
 getUnique();
