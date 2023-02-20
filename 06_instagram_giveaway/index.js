@@ -296,22 +296,14 @@ async function existInAllFiles() {
     out18,
     out19,
   ];
-  const notUniqueNames = [];
-  let per = null;
-  for (let i = 0; i < out0.length; i += 1) {
-    const existsInAllFiles = files.every((file) => file.includes(out0[i]));
-    if (existsInAllFiles) {
-      notUniqueNames.push(out0[i]);
-    }
-    if (Math.floor(((i + 1) / (out0.length - 1)) * 100) !== per) {
-      per = Math.floor(((i + 1) / (out0.length - 1)) * 100);
-      console.log(`${per}%`);
-    }
-  }
 
-  console.log(notUniqueNames.length);
+  const notUniqueNames = out0.filter((name) =>
+    files.every((file) => file.includes(name))
+  );
+
+  console.log([...new Set(notUniqueNames)].length);
   console.timeEnd("Duration");
 }
 
-// getUnique();
+getUnique();
 existInAllFiles();
