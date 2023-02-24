@@ -25,13 +25,27 @@ async function jsonSorting() {
   let falseValues = 0;
   let trueValues = 0;
   for (let i = 0; i < jsonLinks.length; i += 1) {
-    const data = await fetch(jsonLinks[i]).then((response) => {
-      return response.json();
-    });
+    const fetchData = async (url, numOfRetries) => {
+      return await fetch(url)
+        .then((r) => {
+          if (r.ok) {
+            return r.json();
+          }
+          if (numOfRetries > 0) {
+            return fetchData(url, numOfRetries - 1);
+          }
+          throw new Error(r.status);
+        })
+        .catch((err) => console.log(`[Fail] ${jsonLinks[i]}:`, err.message));
+    };
+
+    const data = await fetchData(jsonLinks[i], 3);
+
     const stringifiedData = JSON.stringify(data);
     const isDone =
       stringifiedData[stringifiedData.indexOf("isDone") + 8] === "t";
     isDone ? (trueValues += 1) : (falseValues += 1);
+
     console.log(
       `[Success] ${jsonLinks[i]}: IsDone - ${isDone ? "True" : "False"}`
     );
